@@ -107,7 +107,7 @@ public class ArtistService {
 		return this.util.sendOk("sukses menghapus data artist", true, null);
 	}
 
-    public ResponseEntity<Response> getAllArtist() throws ArtistNotFoundException{
+    public ResponseEntity<Response> getAllArtist(){
 		Iterable<Artist> artist = artistRepo.findAll();
 		return util.sendOk("data artis ditemukan", true, artist);
 	}

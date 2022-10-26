@@ -49,6 +49,11 @@ public class ArtistController {
 	public ResponseEntity<Response> getArtistById(@PathVariable("id") Long id) throws ArtistNotFoundException{
 		return service.getArtistById(id);
 	}
+
+	@GetMapping("/get")
+	public ResponseEntity<Response> getAll() {
+		return service.getAllArtist();
+	}
 	
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Response> deleteArtist(@PathVariable("id") Long id) throws ArtistNotFoundException{
