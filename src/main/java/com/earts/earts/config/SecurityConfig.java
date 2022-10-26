@@ -11,6 +11,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import com.earts.earts.security.filter.JwtFilter;
+import com.earts.earts.security.manager.JwtManager;
+import com.earts.earts.security.provider.JwtProvider;
+
 @Configuration
 public class SecurityConfig {
     
@@ -51,7 +55,18 @@ public class SecurityConfig {
 		return http.build();
 	}
 
-	public AuthenticationFilter filter(){
-		return null;
+	@Bean
+	public JwtProvider provider(){
+		return new JwtProvider();
+	}
+
+	@Bean
+	public JwtManager manager(){
+		return new JwtManager(provider());
+	}
+
+	@Bean
+	public JwtFilter filter(){
+		return new JwtFilter(manager());
 	}
 }
