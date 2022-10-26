@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.earts.earts.app.Response;
+import com.earts.earts.entity.Response;
 
 @Component
 public class ResponseUtil {

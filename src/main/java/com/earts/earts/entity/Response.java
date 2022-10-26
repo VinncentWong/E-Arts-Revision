@@ -1,4 +1,4 @@
-package com.earts.earts.app;
+package com.earts.earts.entity;
 
 import lombok.Data;
 
