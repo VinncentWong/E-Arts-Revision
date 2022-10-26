@@ -3,12 +3,16 @@ package com.earts.earts.entity;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -31,7 +35,8 @@ public class Artwork {
 
     private Integer stock;
 
-    private List<String> variation;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "artwork")
+    private List<ArtworkVariation> variation;
     
     @ElementCollection
     @CollectionTable(
@@ -49,4 +54,7 @@ public class Artwork {
     private Integer height;
 
     private Boolean isPreorder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Artist artist;
 }
