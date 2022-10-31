@@ -9,10 +9,11 @@ import static org.mockito.ArgumentMatchers.isA;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.earts.earts.app.artist.ArtistRepository;
 import com.earts.earts.app.artist.ArtistService;
+import com.earts.earts.dto.AfterLoginDto;
 import com.earts.earts.dto.LoginDto;
 import com.earts.earts.dto.RegistrationDto;
 import com.earts.earts.entity.Artist;
@@ -31,6 +33,7 @@ import com.earts.earts.util.IJwt;
 import com.earts.earts.util.JwtUtil;
 import com.earts.earts.util.ResponseUtil;
 
+@SuppressWarnings("unchecked")
 public class ArtistServiceTest {
 
     private BCryptPasswordEncoder bcrypt;
@@ -43,7 +46,6 @@ public class ArtistServiceTest {
 
     private ArtistService artistService;
 
-    @SuppressWarnings("unchecked")
     // test postfixture
     @BeforeEach
     public void setUp(){
@@ -101,7 +103,6 @@ public class ArtistServiceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void artistShouldSuccessLogin() throws ArtistNotFoundException, NotAuthenticatedException{
 
         // arrange
@@ -131,5 +132,33 @@ public class ArtistServiceTest {
         verify(this.util).sendOk(eq("user authenticated"), eq(true), any(Map.class));
         verify(this.artistRepo).getArtistByEmail(dto.getEmailOrUsername());
         verify(this.jwtUtil).generateToken(isA(IJwt.class), eq(artist));
+    }
+
+    @Test
+    public void artistShouldSuccessAddData() throws ArtistNotFoundException{
+        AfterLoginDto afterLoginDto = new AfterLoginDto();
+        afterLoginDto.setCity("kota");
+        afterLoginDto.setFirstName("budi");
+        afterLoginDto.setLastName("last");
+        afterLoginDto.setProvince("jawa timur");
+        final Long CLIENT_ID = 2L;
+        
+        Artist artist = new Artist();
+        when(this.artistRepo.findById(CLIENT_ID)).thenReturn(Optional.of(artist));
+
+        // init argument captor
+        ArgumentCaptor<Artist> captor = ArgumentCaptor.forClass(Artist.class);
+        ArgumentCaptor<String> captorString = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Boolean> captorBoolean = ArgumentCaptor.forClass(Boolean.class);
+
+        this.artistService.addArtistData(afterLoginDto, CLIENT_ID);
+
+        verify(this.util).sendOk(captorString.capture(), captorBoolean.capture(), captor.capture());
+        assertThat(captorString.getValue()).isEqualTo("sukses menambahkan data artist");
+        assertThat(captorBoolean.getValue()).isEqualTo(true);
+        assertThat(captor.getValue().getCity()).isEqualTo("kota");
+        assertThat(captor.getValue().getFirstName()).isEqualTo("budi");
+        assertThat(captor.getValue().getLastName()).isEqualTo("last");
+        assertThat(captor.getValue().getProvince()).isEqualTo("jawa timur");
     }
 }
