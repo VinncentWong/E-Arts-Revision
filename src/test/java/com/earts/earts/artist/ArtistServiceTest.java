@@ -9,9 +9,9 @@ import static org.mockito.ArgumentMatchers.isA;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpStatus;
@@ -161,4 +161,28 @@ public class ArtistServiceTest {
         assertThat(captor.getValue().getLastName()).isEqualTo("last");
         assertThat(captor.getValue().getProvince()).isEqualTo("jawa timur");
     }
+
+    @Test
+    @DisplayName("artist harus sukses mendapatkan data berdasarkan id artist tersebut")
+    public void artistShouldSuccessGetDataById() throws ArtistNotFoundException{
+        final Long CLIENT_ID = 2L;
+        Artist artist = new Artist();
+        artist.setFirstName("abcde");
+        artist.setLastName("fghij");
+        when(this.artistRepo.findById(CLIENT_ID)).thenReturn(Optional.of(artist));
+
+        // init argument captor
+        ArgumentCaptor<Artist> captor = ArgumentCaptor.forClass(Artist.class);
+        ArgumentCaptor<String> captorString = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Boolean> captorBoolean = ArgumentCaptor.forClass(Boolean.class);
+
+        this.artistService.getArtistById(CLIENT_ID);
+
+        verify(this.util).sendOk(captorString.capture(), captorBoolean.capture(), captor.capture());
+        assertThat(captorString.getValue()).isEqualTo("data artis ditemukan");
+        assertThat(captorBoolean.getValue()).isEqualTo(true);
+        assertThat(captor.getValue().getFirstName()).isEqualTo("abcde");
+        assertThat(captor.getValue().getLastName()).isEqualTo("fghij");
+    }
+
 }
