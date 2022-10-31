@@ -1,9 +1,12 @@
 package com.earts.earts.artist;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,10 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.earts.earts.app.artist.ArtistRepository;
 import com.earts.earts.app.artist.ArtistService;
+import com.earts.earts.dto.LoginDto;
 import com.earts.earts.dto.RegistrationDto;
 import com.earts.earts.entity.Artist;
 import com.earts.earts.entity.Response;
 import com.earts.earts.entity.Role;
+import com.earts.earts.exception.ArtistNotFoundException;
+import com.earts.earts.exception.NotAuthenticatedException;
 import com.earts.earts.util.JwtUtil;
 import com.earts.earts.util.ResponseUtil;
 
@@ -32,6 +38,8 @@ public class ArtistServiceTest {
 	
 	private JwtUtil<Artist> jwtUtil;
 
+    private ArtistService artistService;
+
     @SuppressWarnings("unchecked")
     // test postfixture
     @BeforeEach
@@ -40,6 +48,7 @@ public class ArtistServiceTest {
         this.util = mock(ResponseUtil.class);
         this.artistRepo = mock(ArtistRepository.class);
         this.jwtUtil = mock(JwtUtil.class);
+        this.artistService = new ArtistService(bcrypt, util, artistRepo, jwtUtil);
     }
     
     // --------------------------------------HAPPY FLOW-----------------------------------------
@@ -60,9 +69,6 @@ public class ArtistServiceTest {
         artist.setEmail("artist");
         artist.setRole(Role.ARTIST);
         artist.setPassword("bcrypt123456");
-        ArtistService artistService = new ArtistService(
-            this.bcrypt, this.util, this.artistRepo, this.jwtUtil
-        );
         final String MESSAGE = "success create user data";
         final boolean SUCCESS = true;
         Response responseObject = new Response();
@@ -78,16 +84,48 @@ public class ArtistServiceTest {
         when(this.artistRepo.getArtistByEmail(dto.getEmail())).thenReturn(Optional.empty());
         when(this.artistRepo.getArtistByUsername(dto.getUsername())).thenReturn(Optional.empty());
         when(this.bcrypt.encode(dto.getPassword())).thenReturn("bcrypt123456");
-        when(this.util.sendCreated(MESSAGE, SUCCESS, artist))
+        when(this.util.sendCreated(eq(MESSAGE), eq(SUCCESS), any(Artist.class)))
         .thenReturn(ResponseEntity.status(HttpStatus.CREATED).body(responseObject));
 
         // act
-        ResponseEntity<Response> response = artistService.createArtist(dto);
+        ResponseEntity<Response> response = this.artistService.createArtist(dto);
         System.out.println(response);
         // assertion
         assertThat(response) // actual
         .as("artist harus dibuat")
         // expected
         .isEqualTo(ResponseEntity.status(HttpStatus.CREATED).body(responseObject));
+    }
+
+    @Test
+    public void artistShouldSuccessLogin() throws ArtistNotFoundException, NotAuthenticatedException{
+
+        // arrange
+        LoginDto dto = mock(LoginDto.class);
+        Artist artist = mock(Artist.class);
+        Response responseObject = new Response();
+        responseObject.setData(artist);
+        responseObject.setMessage("user authenticated");
+        responseObject.setSuccess(true);
+
+        // assumption
+        when(dto.getEmailOrUsername()).thenReturn("artist@gmail.com");
+        when(this.artistRepo.getArtistByEmail(dto.getEmailOrUsername())).thenReturn(Optional.of(artist));
+        when(bcrypt.matches(dto.getPassword(), artist.getPassword())).thenReturn(true);
+        when(this.jwtUtil.generateToken(this.jwtUtil::implementationGenerateToken, artist)).thenReturn("jwts_token");
+        when(this.util.sendOk(eq("user authenticated"), eq(true), any(Map.class)))
+        .thenReturn(ResponseEntity.status(HttpStatus.OK).body(responseObject));
+
+        // act
+        var response = this.artistService.loginArtist(dto);
+        
+        // assertion
+        assertThat(response.getBody())
+        .as("response login harus sukses login")
+        .isEqualTo(responseObject);
+
+        verify(this.util).sendOk(eq("user authenticated"), eq(true), any(Map.class));
+        verify(this.artistRepo).getArtistByEmail(dto.getEmailOrUsername());
+        verify(this.jwtUtil).generateToken(this.jwtUtil::implementationGenerateToken, artist);
     }
 }
