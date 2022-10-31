@@ -41,7 +41,7 @@ public class ArtistService {
 	
 	public ResponseEntity<Response> createArtist(RegistrationDto dto){
 		Optional<Artist> tempArtist = this.artistRepo.getArtistByEmail(dto.getEmail());
-        Optional<Artist> tempArtist2 = this.artistRepo.getArtistByUsername(dto.getUsername());
+        	Optional<Artist> tempArtist2 = this.artistRepo.getArtistByUsername(dto.getUsername());
 		if(tempArtist.isPresent() || tempArtist2.isPresent()) {
 			return this.util.sendBadRequest("email sudah terdaftar", false);
 		}
@@ -56,13 +56,13 @@ public class ArtistService {
 	
 	public ResponseEntity<Response> loginArtist(LoginDto dto) throws ArtistNotFoundException, NotAuthenticatedException{
 		Optional<Artist> artistByEmail = artistRepo.getArtistByEmail(dto.getEmailOrUsername());
-        if(artistByEmail.isEmpty()){
-            artistByEmail = artistRepo.getArtistByUsername(dto.getEmailOrUsername());
-            if(artistByEmail.isEmpty()){
-                throw new ArtistNotFoundException();
-            }
-        }
-        Artist artist = artistByEmail.get();
+		if(artistByEmail.isEmpty()){
+		    artistByEmail = artistRepo.getArtistByUsername(dto.getEmailOrUsername());
+		    if(artistByEmail.isEmpty()){
+			throw new ArtistNotFoundException();
+		    }
+		}
+		Artist artist = artistByEmail.get();
 		if(bcrypt.matches(dto.getPassword(), artist.getPassword())) {
 			String token = jwtUtil.generateToken(jwtUtil::implementationGenerateToken, artist);
 			Map<String, Object> map = new HashMap<>();
