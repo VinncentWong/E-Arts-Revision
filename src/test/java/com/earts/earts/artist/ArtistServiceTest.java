@@ -229,4 +229,26 @@ public class ArtistServiceTest {
         assertThat(newList.get(2).getFirstName()).isEqualTo("artist3");
     }
 
+    // --------------------------------------ERROR FLOW-----------------------------------------
+    
+    @Test
+    @DisplayName("artist harus mengirim email sudah terdaftar")
+    public void artistShouldSendBadRequestWhenCreateArtist(){
+        final String EMAIL = "artist@gmail.com";
+        final String USERNAME = "artist";
+        RegistrationDto dto = new RegistrationDto();
+        dto.setUsername(USERNAME);
+        dto.setEmail(EMAIL);
+        Artist artist = new Artist();
+        artist.setEmail(EMAIL);
+        artist.setFirstName("artist");
+        artist.setLastName("last");
+        artist.setUsername(USERNAME);
+        when(this.artistRepo.getArtistByEmail(dto.getEmail())).thenReturn(Optional.of(artist));
+        when(this.artistRepo.getArtistByUsername(dto.getUsername())).thenReturn(Optional.empty());
+
+        this.artistService.createArtist(dto);
+
+        verify(this.util).sendBadRequest(eq("email sudah terdaftar"), eq(false));
+    }
 }
