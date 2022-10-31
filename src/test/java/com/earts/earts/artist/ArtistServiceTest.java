@@ -5,10 +5,12 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.isA;
 
 import java.util.Map;
 import java.util.Optional;
 
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ import com.earts.earts.entity.Response;
 import com.earts.earts.entity.Role;
 import com.earts.earts.exception.ArtistNotFoundException;
 import com.earts.earts.exception.NotAuthenticatedException;
+import com.earts.earts.util.IJwt;
 import com.earts.earts.util.JwtUtil;
 import com.earts.earts.util.ResponseUtil;
 
@@ -98,6 +101,7 @@ public class ArtistServiceTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void artistShouldSuccessLogin() throws ArtistNotFoundException, NotAuthenticatedException{
 
         // arrange
@@ -126,6 +130,6 @@ public class ArtistServiceTest {
 
         verify(this.util).sendOk(eq("user authenticated"), eq(true), any(Map.class));
         verify(this.artistRepo).getArtistByEmail(dto.getEmailOrUsername());
-        verify(this.jwtUtil).generateToken(this.jwtUtil::implementationGenerateToken, artist);
+        verify(this.jwtUtil).generateToken(isA(IJwt.class), eq(artist));
     }
 }
