@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.earts.earts.app.artist.ArtistRepository;
 import com.earts.earts.app.artist.ArtistService;
@@ -250,5 +251,21 @@ public class ArtistServiceTest {
         this.artistService.createArtist(dto);
 
         verify(this.util).sendBadRequest(eq("email sudah terdaftar"), eq(false));
+    }
+
+    @Test
+    @DisplayName("service harus throw ArtistNotFoundException")
+    public void serviceShouldThrowArtistNotFoundException(){
+        final String EMAIL = "artist@gmail.com";
+        LoginDto dto = new LoginDto();
+        dto.setEmailOrUsername(EMAIL);
+        dto.setPassword("abcdef");
+        when(this.artistRepo.getArtistByEmail(dto.getEmailOrUsername())).thenReturn(Optional.empty());
+        when(this.artistRepo.getArtistByUsername(dto.getEmailOrUsername())).thenReturn(Optional.empty());
+        
+        assertThatExceptionOfType(ArtistNotFoundException.class)
+        .isThrownBy(() -> {
+            this.artistService.loginArtist(dto);
+        });
     }
 }
