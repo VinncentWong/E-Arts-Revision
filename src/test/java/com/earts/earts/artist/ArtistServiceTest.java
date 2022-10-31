@@ -7,6 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.isA;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -183,6 +186,47 @@ public class ArtistServiceTest {
         assertThat(captorBoolean.getValue()).isEqualTo(true);
         assertThat(captor.getValue().getFirstName()).isEqualTo("abcde");
         assertThat(captor.getValue().getLastName()).isEqualTo("fghij");
+    }
+
+    @Test
+    @DisplayName("harus mengembalikan list of Artist ketika memanggil findAll method")
+    public void getAll(){
+        var artist1 = new Artist();
+        var artist2 = new Artist();
+        var artist3 = new Artist();
+
+        artist1.setFirstName("artist1");
+        artist2.setFirstName("artist2");
+        artist3.setFirstName("artist3");
+
+        var list = new ArrayList<Artist>();
+        list.add(artist1);
+        list.add(artist2);
+        list.add(artist3);
+        when(this.artistRepo.findAll()).thenReturn(list);
+
+        this.artistService.getAllArtist();
+
+        // init argument captor
+        ArgumentCaptor<Iterable<Artist>> captor = ArgumentCaptor.forClass(Iterable.class);
+        ArgumentCaptor<String> captorString = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Boolean> captorBoolean = ArgumentCaptor.forClass(Boolean.class);
+
+        verify(this.util).sendOk(captorString.capture(), captorBoolean.capture(), captor.capture());
+
+        assertThat(captorString.getValue()).isEqualTo("data artis ditemukan");
+        assertThat(captorBoolean.getValue()).isEqualTo(true);
+        
+        Iterable<Artist> listArtist = captor.getValue();
+        List<Artist> newList = new ArrayList<>();
+        Iterator<Artist> iterator = listArtist.iterator();
+        while(iterator.hasNext()){
+            newList.add(iterator.next());
+        }
+        System.out.println(newList.get(0));
+        assertThat(newList.get(0).getFirstName()).isEqualTo("artist1");
+        assertThat(newList.get(1).getFirstName()).isEqualTo("artist2");
+        assertThat(newList.get(2).getFirstName()).isEqualTo("artist3");
     }
 
 }
