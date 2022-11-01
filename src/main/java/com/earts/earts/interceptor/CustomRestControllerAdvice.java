@@ -2,6 +2,7 @@ package com.earts.earts.interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -28,5 +29,10 @@ public class CustomRestControllerAdvice {
 	@ExceptionHandler(NotAuthenticatedException.class)
 	public ResponseEntity<Response> sendInternalServerErrorException(){
 		return util.sendInternalServerError("user tidak terautentikasi!", false);
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Response> sendArgumentNotValid(MethodArgumentNotValidException ex){
+		return util.sendBadRequest(ex.getLocalizedMessage(), false);
 	}
 }
