@@ -268,4 +268,20 @@ public class ArtistServiceTest {
             this.artistService.loginArtist(dto);
         });
     }
+
+    @Test
+    @DisplayName("service harus throw Not Authenticated Exception")
+    public void serviceShouldThrowNotAuthenticatedException(){
+        LoginDto dto = new LoginDto();
+        Artist artist = new Artist();
+        artist.setPassword("passwordArtist");
+        artist.setUsername("artist");
+        when(this.artistRepo.getArtistByEmail(dto.getEmailOrUsername())).thenReturn(Optional.empty());
+        when(this.artistRepo.getArtistByUsername(dto.getEmailOrUsername())).thenReturn(Optional.of(artist));
+        when(this.bcrypt.matches(eq(dto.getPassword()), eq(artist.getPassword()))).thenReturn(false);
+        
+        assertThatExceptionOfType(NotAuthenticatedException.class).isThrownBy(() -> {
+            this.artistService.loginArtist(dto);
+        });
+    }
 }
