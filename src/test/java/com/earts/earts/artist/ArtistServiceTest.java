@@ -306,4 +306,15 @@ public class ArtistServiceTest {
             this.artistService.getArtistById(CLIENT_ID);
         });
     }
+
+    @Test
+    @DisplayName("service harus throw artist not found exception")
+    public void serviceShouldThrowArtistNotFoundExceptionWhenDeleteArtist(){
+        final Long CLIENT_ID = 1L;
+        when(this.artistRepo.findById(CLIENT_ID)).thenReturn(Optional.empty());
+
+        assertThatExceptionOfType(ArtistNotFoundException.class).isThrownBy(() -> {
+            this.artistService.deleteArtist(CLIENT_ID);
+        });
+    }
 }
