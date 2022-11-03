@@ -8,30 +8,33 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.lang.NonNull;
+
 import com.earts.earts.entity.Role;
 
 import lombok.Data;
 
+
 @Data
 public class RegistrationDto {
     
-    @NotNull
-    @NotBlank
-    @Email
+    @NotNull(message = "email tidak boleh kosong")
+    @NotBlank(message = "email tidak boleh kosong")
+    @Email(message = "format email tidak valid")
     private String email;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "username tidak boleh kosong")
+    @NotBlank(message = "username tidak boleh kosong")
     private String username;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "password tidak boleh kosong")
+    @NotBlank(message = "password tidak boleh kosong")
     private String password;
 
-    @NotNull
+    @NotNull(message = "birth date tidak boleh kosong")
     private Date birthDate;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @NotNull(message = "role tidak boleh kosong")
     private Role role;
 }

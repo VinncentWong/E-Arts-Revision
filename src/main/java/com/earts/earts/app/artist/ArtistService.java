@@ -41,7 +41,7 @@ public class ArtistService {
 	
 	public ResponseEntity<Response> createArtist(RegistrationDto dto){
 		Optional<Artist> tempArtist = this.artistRepo.getArtistByEmail(dto.getEmail());
-        	Optional<Artist> tempArtist2 = this.artistRepo.getArtistByUsername(dto.getUsername());
+        Optional<Artist> tempArtist2 = this.artistRepo.getArtistByUsername(dto.getUsername());
 		if(tempArtist.isPresent() || tempArtist2.isPresent()) {
 			return this.util.sendBadRequest("email sudah terdaftar", false);
 		}
