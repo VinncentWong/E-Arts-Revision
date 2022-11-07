@@ -13,7 +13,6 @@ public class JwtAuthentication extends UsernamePasswordAuthenticationToken{
 
     public JwtAuthentication(Object principal, Object credentials) {
         super(principal, credentials);
-        //TODO Auto-generated constructor stub
     }
     
 }
