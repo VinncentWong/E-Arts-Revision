@@ -8,11 +8,11 @@ import lombok.Data;
 @Data
 public class LoginDto {
     
-    @NotBlank
-    @NotNull
+    @NotBlank(message = "email atau username tidak boleh kosong")
+    @NotNull(message = "email atau username tidak boleh kosong")
     private String emailOrUsername;
 
-    @NotBlank
-    @NotNull
+    @NotBlank(message = "password tidak boleh kosong")
+    @NotNull(message = "password tidak boleh kosong")
     private String password;
 }
