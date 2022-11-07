@@ -1,4 +1,4 @@
-package com.earts.earts.dto;
+package com.earts.earts.dto.artist;
 
 import java.util.Date;
 
@@ -7,8 +7,6 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.lang.NonNull;
 
 import com.earts.earts.entity.Role;
 

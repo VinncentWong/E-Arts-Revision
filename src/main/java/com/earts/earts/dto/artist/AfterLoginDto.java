@@ -1,4 +1,4 @@
-package com.earts.earts.dto;
+package com.earts.earts.dto.artist;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -8,19 +8,19 @@ import lombok.Data;
 @Data
 public class AfterLoginDto {
     
-    @NotNull
-    @NotBlank
+    @NotNull(message = "firstname tidak boleh kosong")
+    @NotBlank(message = "firstname tidak boleh kosong")
     private String firstName;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "lastname tidak boleh kosong")
+    @NotBlank(message = "lastname tidak boleh kosong")
     private String lastName;
     
-    @NotNull
-    @NotBlank
+    @NotNull(message = "province tidak boleh kosong")
+    @NotBlank(message = "province tidak boleh kosong")
     private String province;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "city tidak boleh kosong")
+    @NotBlank(message = "city tidak boleh kosong")
     private String city;
 }

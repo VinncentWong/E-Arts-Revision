@@ -1,4 +1,4 @@
-package com.earts.earts.dto;
+package com.earts.earts.dto.artist;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
