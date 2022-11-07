@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.earts.earts.entity.Artist;
+import com.earts.earts.entity.artist.Artist;
 
 @Repository
 public interface ArtistRepository extends CrudRepository<Artist, Long>{

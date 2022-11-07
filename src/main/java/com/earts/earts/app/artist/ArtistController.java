@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.earts.earts.dto.AfterLoginDto;
-import com.earts.earts.dto.LoginDto;
-import com.earts.earts.dto.RegistrationDto;
+import com.earts.earts.dto.artist.AfterLoginDto;
+import com.earts.earts.dto.artist.LoginDto;
+import com.earts.earts.dto.artist.RegistrationDto;
 import com.earts.earts.entity.Response;
 import com.earts.earts.exception.ArtistNotFoundException;
 import com.earts.earts.exception.NotAuthenticatedException;

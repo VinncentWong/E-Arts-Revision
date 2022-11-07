@@ -9,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.earts.earts.dto.AfterLoginDto;
-import com.earts.earts.dto.LoginDto;
-import com.earts.earts.dto.RegistrationDto;
-import com.earts.earts.entity.Artist;
+import com.earts.earts.dto.artist.AfterLoginDto;
+import com.earts.earts.dto.artist.LoginDto;
+import com.earts.earts.dto.artist.RegistrationDto;
 import com.earts.earts.entity.Response;
+import com.earts.earts.entity.artist.Artist;
 import com.earts.earts.exception.ArtistNotFoundException;
 import com.earts.earts.exception.NotAuthenticatedException;
 import com.earts.earts.util.JwtUtil;
