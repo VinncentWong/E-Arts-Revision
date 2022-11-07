@@ -25,12 +25,12 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.earts.earts.app.artist.ArtistRepository;
 import com.earts.earts.app.artist.ArtistService;
-import com.earts.earts.dto.AfterLoginDto;
-import com.earts.earts.dto.LoginDto;
-import com.earts.earts.dto.RegistrationDto;
-import com.earts.earts.entity.Artist;
+import com.earts.earts.dto.artist.AfterLoginDto;
+import com.earts.earts.dto.artist.LoginDto;
+import com.earts.earts.dto.artist.RegistrationDto;
 import com.earts.earts.entity.Response;
 import com.earts.earts.entity.Role;
+import com.earts.earts.entity.artist.Artist;
 import com.earts.earts.exception.ArtistNotFoundException;
 import com.earts.earts.exception.NotAuthenticatedException;
 import com.earts.earts.util.IJwt;
