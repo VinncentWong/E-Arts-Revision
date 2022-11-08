@@ -79,4 +79,6 @@ public class ArtworkService {
         Artwork artwork = this.artworkRepository.findById(uuid).orElseThrow(() -> new ArtworkNotFoundException("artwork tidak ditemukan"));
         return this.util.sendOk("sukses mendapatkan artwork", true, artwork);
     }
+
+    
 }
