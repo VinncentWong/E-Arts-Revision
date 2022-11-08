@@ -168,7 +168,7 @@ public class ArtworkTest {
     @Test
     @DisplayName("service harus sukses mendapatkan semua artwork")
     @SuppressWarnings("unchecked")
-    public void getArtworks(){
+    public void serviceShouldSuccessgetArtworks(){
         
         List<Artwork> list = new ArrayList<>();
         var artwork1 = new Artwork();
@@ -192,5 +192,22 @@ public class ArtworkTest {
         assertThat(listTest.get(0).getArtworkName()).isEqualTo("artwork1");
         assertThat(listTest.get(1).getArtworkName()).isEqualTo("artwork2");
         assertThat(listTest.get(2).getArtworkName()).isEqualTo("artwork3");
+    }
+
+    @Test
+    @DisplayName("service harus sukses mengembalikan artwork tetapi berdasarkan artist id")
+    public void serviceShouldSuccessGetArtworkByArtistId() throws ArtworkNotFoundException{
+        Artwork artwork = new Artwork();
+        artwork.setArtworkName("artwork1");
+        when(this.artworkRepository.getArtworkByArtistId(eq(1L))).thenReturn(Optional.of(artwork));
+
+        this.service.getArtwork(1L);
+
+        verify(this.responseUtil).sendOk(this.captorMessage.capture(), this.captorSuccess.capture(), this.captorData.capture());
+
+        assertThat(this.captorMessage.getValue()).isEqualTo("sukses mendapatkan artwork");
+        assertThat(this.captorSuccess.getValue()).isEqualTo(true);
+        Artwork artworkTest = (Artwork)this.captorData.getValue();
+        assertThat(artworkTest.getArtworkName()).isEqualTo("artwork1");
     }
 }
