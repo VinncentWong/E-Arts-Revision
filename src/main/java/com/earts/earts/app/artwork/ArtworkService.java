@@ -80,5 +80,8 @@ public class ArtworkService {
         return this.util.sendOk("sukses mendapatkan artwork", true, artwork);
     }
 
-    
+    public ResponseEntity<Response> getArtworks(){
+        List<Artwork> list = (List<Artwork>)this.artworkRepository.findAll();
+        return this.util.sendOk("sukses mendapatkan semua artwork", true, list);
+    }
 }
