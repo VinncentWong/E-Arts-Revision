@@ -164,4 +164,33 @@ public class ArtworkTest {
         assertThat(testArtwork.getUuid().toString()).isEqualTo(uuid);
         assertThat(testArtwork.getDescription()).isEqualTo("description1");
     }
+
+    @Test
+    @DisplayName("service harus sukses mendapatkan semua artwork")
+    @SuppressWarnings("unchecked")
+    public void getArtworks(){
+        
+        List<Artwork> list = new ArrayList<>();
+        var artwork1 = new Artwork();
+        artwork1.setArtworkName("artwork1");
+        var artwork2 = new Artwork();
+        artwork2.setArtworkName("artwork2");
+        var artwork3 = new Artwork();
+        artwork3.setArtworkName("artwork3");
+        list.add(artwork1);
+        list.add(artwork2);
+        list.add(artwork3);
+
+        when(this.artworkRepository.findAll()).thenReturn(list);
+
+        this.service.getArtworks();
+
+        verify(this.responseUtil).sendOk(this.captorMessage.capture(), this.captorSuccess.capture(), this.captorData.capture());
+        assertThat(this.captorMessage.getValue()).isEqualTo("sukses mendapatkan semua artwork");
+        assertThat(this.captorSuccess.getValue()).isEqualTo(true);
+        List<Artwork> listTest = (List<Artwork>)this.captorData.getValue();
+        assertThat(listTest.get(0).getArtworkName()).isEqualTo("artwork1");
+        assertThat(listTest.get(1).getArtworkName()).isEqualTo("artwork2");
+        assertThat(listTest.get(2).getArtworkName()).isEqualTo("artwork3");
+    }
 }
