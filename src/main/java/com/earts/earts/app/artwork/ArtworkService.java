@@ -16,6 +16,7 @@ import com.earts.earts.entity.artist.Artist;
 import com.earts.earts.entity.artwork.Artwork;
 import com.earts.earts.entity.artwork.ArtworkPhoto;
 import com.earts.earts.exception.ArtistNotFoundException;
+import com.earts.earts.exception.ArtworkNotFoundException;
 import com.earts.earts.util.ResponseUtil;
 
 @Service
@@ -72,5 +73,10 @@ public class ArtworkService {
         artwork.setWidth(artworkDto.getWidth());
         this.artworkRepository.save(artwork);
         return this.util.sendCreated("sukses membuat artwork", true, artwork);
+    }
+
+    public ResponseEntity<Response> getArtwork(String uuid) throws ArtworkNotFoundException{
+        Artwork artwork = this.artworkRepository.findById(uuid).orElseThrow(() -> new ArtworkNotFoundException("artwork tidak ditemukan"));
+        return this.util.sendOk("sukses mendapatkan artwork", true, artwork);
     }
 }
