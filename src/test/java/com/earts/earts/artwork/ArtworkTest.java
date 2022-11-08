@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +31,7 @@ import com.earts.earts.entity.artist.Artist;
 import com.earts.earts.entity.artwork.Artwork;
 import com.earts.earts.entity.artwork.ArtworkCategory;
 import com.earts.earts.exception.ArtistNotFoundException;
+import com.earts.earts.exception.ArtworkNotFoundException;
 import com.earts.earts.util.ResponseUtil;
 
 public class ArtworkTest {
@@ -138,5 +140,27 @@ public class ArtworkTest {
         assertThat(assertArtwork.getLength()).isEqualTo(10);
         assertThat(assertArtwork.getWeight()).isEqualTo(10);
         assertThat(assertArtwork.getWidth()).isEqualTo(10);
+    }
+
+    @Test
+    public void serviceShouldSuccessGetArtwork() throws ArtworkNotFoundException{
+        String uuid = UUID.randomUUID().toString();
+        Artwork artwork = new Artwork();
+        artwork.setArtworkName("artwork1");
+        artwork.setCategory(ArtworkCategory.ALL);
+        artwork.setDescription("description1");
+        artwork.setUuid(UUID.fromString(uuid));
+        when(this.artworkRepository.findById(eq(uuid))).thenReturn(Optional.of(artwork));
+
+        this.service.getArtwork(uuid);
+
+        verify(this.responseUtil).sendOk(this.captorMessage.capture(), this.captorSuccess.capture(), this.captorData.capture());
+        assertThat(this.captorMessage.getValue()).isEqualTo("sukses mendapatkan artwork");
+        assertThat(this.captorSuccess.getValue()).isEqualTo(true);
+        Artwork testArtwork = (Artwork)this.captorData.getValue();
+        assertThat(testArtwork.getArtworkName()).isEqualTo("artwork1");
+        assertThat(testArtwork.getCategory().name()).isEqualTo("ALL");
+        assertThat(testArtwork.getUuid().toString()).isEqualTo(uuid);
+        assertThat(testArtwork.getDescription()).isEqualTo("description1");
     }
 }
