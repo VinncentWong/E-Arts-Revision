@@ -37,7 +37,7 @@ public class SecurityConfig {
 		.permitAll()
 		.mvcMatchers("/superadmin/login", "/superadmin/signup")
 		.permitAll()
-		.mvcMatchers("/artist/login", "/artist/create")
+		.mvcMatchers("/artist/login", "/artist/create", "/artist/get/**")
 		.permitAll()
 		.mvcMatchers("/user/login", "/user/create")
 		.permitAll()
