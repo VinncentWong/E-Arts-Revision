@@ -143,6 +143,7 @@ public class ArtworkTest {
     }
 
     @Test
+    @DisplayName("service harus sukses mendapatkan artwork")
     public void serviceShouldSuccessGetArtwork() throws ArtworkNotFoundException{
         String uuid = UUID.randomUUID().toString();
         Artwork artwork = new Artwork();
